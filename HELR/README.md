@@ -1,3 +1,5 @@
+https://github.com/K-miran/HELR
+
 Secure Logistic Regression based on Homomorphic Encryption
 Our code requires the NTL library which is available at http://www.shoup.net/ntl/, and a c++ compiler. Our underlying homomorphic encryption scheme is “Homomorphic Encryption for Arithmetic of Approximate Numbers” and we referred to its library in the "src" folder.
 $make clean
