@@ -1,0 +1,322 @@
+#1 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+start the server of vps, get IP Address and Password
+configure the FlashFXP(Version:5.4.0) to connect to vps(SFTP over SSH,IP Address,"root",Password)
+use flashftp to upload the files(HElib-master.zip,ntl-11.3.0.tar.gz,gmp-6.1.2.tar.lz) to vps
+
+#2 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+1. unzip each file
+   XXX.tar.lz     >>>      install lzip(#apt-get install lzip or yum install lzip); lzip -d xxx.tar.lz; tar -xvf xxx.tar   
+   XXX.zip        >>>      install zip(#yum install zip unzip  ); unzip HElib-master.zip
+   XXX.tar.gz     >>>      tar -xzvf ntl-11.3.0.tar.gz
+2. preparation
+2.1. g++:  apt-get update apt-get install g++ or yum update yum install gcc yum install gcc-c++  gcc -v  g++ -v
+2.2. make: apt-get install make or yum install make
+2.3. m4: apt-get install m4 or yum install m4
+
+3. install GMP as follows.
+3.1. Download GMP from http://www.gmplib.org
+3.2. uncompress and cd into the directory gmp-XXX
+      # cd gmp-x.x.x
+3.3. On the command line:
+      # ./configure --enable-cxx
+      # make
+      # make install
+     This should install GMP into /usr/local
+3.4. Test whether GMP is successfully installed or not:
+GMPtest.cpp
+=============================================================
+#include<iostream>
+#include<gmpxx.h>
+
+using namespace std;
+
+int main()
+{
+    mpz_class a;
+    //计算2的1000次方
+    a = 1;
+    for(int i = 0; i < 1000; i++)  a *= 2;
+    cout<<"2^1000 = "<<a<<endl;
+
+    //计算-12345*9876543210123456789
+    mpz_class b, c;
+    b = -12345;
+    c = "98765432100123456789";
+    cout<<"b * c = "<<b * c<<endl;
+
+    return 0;    
+
+}
+=============================================================
+      # g++ -lgmp -lgmpxx  GMPtest.cpp
+      # ./a.out
+      # g++ GMPtest.cpp -o GMPtest.out -lgmpxx -lgmp
+      # ./GMPtest.out
+      
+      # ./GMPtest.out: error while loading shared libraries: libgmpxx.so.4: cannot open shared object file: No such file or directory
+      copy the files in "/usr/local/gmp-6.1.2/lib/" to "/usr/local/gmp-6.1.2/share/" and "/usr/local/gmp-6.1.2/share/info/"
+      # ldconfig
+      
+      # ldd GMPtest.out
+	          linux-vdso.so.1 (0x00007ffd4a7f2000)
+	          libgmpxx.so.4 => /usr/local/lib/libgmpxx.so.4 (0x00007f66c57de000)
+	          libgmp.so.10 => /usr/local/lib/libgmp.so.10 (0x00007f66c5568000)
+	          libstdc++.so.6 => /usr/lib/x86_64-linux-gnu/libstdc++.so.6 (0x00007f66c51e6000)
+	          libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007f66c4ee2000)
+	          libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f66c4ccb000)
+	          libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007f66c492c000)
+	          /lib64/ld-linux-x86-64.so.2 (0x00007f66c5be7000)
+
+=============================================================
+
+4. install NTL as follows.
+4.1. Download NTL from http://www.shoup.net/ntl/
+4.2. Uncompress and cd into the directory ntl-XXX/src
+      # cd ntl-x.x.x
+      # cd src
+4.3. On the command line:
+      # ./configure NTL_THREADS=on NTL_THREAD_BOOST=on NTL_EXCEPTIONS=on
+      # make
+      # make install
+     This should install NTL into /usr/local.
+4.4. Test whether NTL is successfully installed or not:
+NTLtest.cpp
+=============================================================
+#include <NTL/ZZ.h>
+
+using namespace std;
+using namespace NTL;
+
+int main()
+{
+   ZZ a, b, c; 
+
+   cin >> a; 
+   cin >> b; 
+
+   c = (a+1)*(b+1);
+   cout << c << "\n";
+
+   return 0;
+}
+=============================================================
+      # g++ -pthread NTLtest.cpp -o NTLtest.out -lntl -lgmp
+      # ./NTLtest.out
+      45       (input 45)
+      67       (input 67)
+      3128   (output 3128)      
+      
+# Attention!
+
+root@vultr:/home# g++ -pthread TESTntl.cpp -o TESTntl.out -lntl -lgmp   (also work!)
+root@vultr:/home# g++ -pthread -lntl -lgmp TESTntl.cpp -o TESTntl.out   (cant work!)
+
+/tmp/cc9mYekk.o: In function `main':
+TESTntl.cpp:(.text+0x3c): undefined reference to `NTL::operator>>(std::istream&, NTL::ZZ&)'
+TESTntl.cpp:(.text+0x4f): undefined reference to `NTL::operator>>(std::istream&, NTL::ZZ&)'
+TESTntl.cpp:(.text+0xe0): undefined reference to `NTL::operator<<(std::ostream&, NTL::ZZ const&)'
+/tmp/cc9mYekk.o: In function `NTL::ZZ::Deleter::apply(_ntl_gbigint_body*)':
+TESTntl.cpp:(.text._ZN3NTL2ZZ7Deleter5applyEP17_ntl_gbigint_body[_ZN3NTL2ZZ7Deleter5applyEP17_ntl_gbigint_body]+0x14): undefined reference to `_ntl_gfree(_ntl_gbigint_body*)'
+/tmp/cc9mYekk.o: In function `NTL::ZZ::operator=(NTL::ZZ&&)':
+TESTntl.cpp:(.text._ZN3NTL2ZZaSEOS0_[_ZN3NTL2ZZaSEOS0_]+0x66): undefined reference to `_ntl_gcopy(_ntl_gbigint_body*, _ntl_gbigint_body**)'
+/tmp/cc9mYekk.o: In function `NTL::add(NTL::ZZ&, NTL::ZZ const&, long)':
+TESTntl.cpp:(.text._ZN3NTL3addERNS_2ZZERKS0_l[_ZN3NTL3addERNS_2ZZERKS0_l]+0x41): undefined reference to `_ntl_gsadd(_ntl_gbigint_body*, long, _ntl_gbigint_body**)'
+/tmp/cc9mYekk.o: In function `NTL::mul(NTL::ZZ&, NTL::ZZ const&, NTL::ZZ const&)':
+TESTntl.cpp:(.text._ZN3NTL3mulERNS_2ZZERKS0_S3_[_ZN3NTL3mulERNS_2ZZERKS0_S3_]+0x4e): undefined reference to `_ntl_gmul(_ntl_gbigint_body*, _ntl_gbigint_body*, _ntl_gbigint_body**)'
+collect2: error: ld returned 1 exit status
+
+-------------------------------------------------------------
+      # ./configure: line 15: perl: command not found
+      # yum install perl
+      # ./configure ... ... ... ... ... ... ... ... ...
+
+=============================================================
+
+#3  WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
+HElib
+install HElib as follows.
+4.1. Download HElib from https://github.com/shaih/HElib
+4.2. Uncompress and cd into the directory HElib-master/src directory
+      # cd HElib-master
+      # cd src
+4.3. On the command line in the HElib src directory to build HElib:
+      # make
+     will compile and build the library fhe.a.
+     Once built, run
+      # make check
+     which will compile and runs a series of test programs.
+     If you want to build your own program based on HElib, the easiest
+     way to do it is to write the program in a file called myprog.cpp 
+     and then run
+      # make myprog_x
+     which will compile myprog.cpp and link in fhe.a and all required 
+     support libraries, and create the executable myprog_x.
+
+=============================================================
+root@vultr:/home/HElib-master/src# make check
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+make check_General
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+g++ -g -O2 -std=c++11 -pthread -DFHE_THREADS -DFHE_BOOT_THREADS -fmax-errors=2 -o Test_General_x Test_General.cpp fhe.a -L/usr/local/lib -lntl -lgmp -lm
+./Test_General_x R=1 k=10 p=2 r=2 noPrint=1
+./Test_General_x: GOOD
+
+./Test_General_x R=1 k=10 p=2 d=2 noPrint=1
+./Test_General_x: GOOD
+
+./Test_General_x R=2 k=10 p=7 r=2 noPrint=1
+./Test_General_x: GOOD
+
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_matmul
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+g++ -g -O2 -std=c++11 -pthread -DFHE_THREADS -DFHE_BOOT_THREADS -fmax-errors=2 -o Test_matmul_x Test_matmul.cpp fhe.a -L/usr/local/lib -lntl -lgmp -lm
+./Test_matmul_x m=18631 L=8 
+Nice!!
+
+./Test_matmul_x block=1 m=24295 gens="[16386 16427]" ords="[42 16]" L=8
+Killed
+Makefile:77: recipe for target 'check_matmul' failed
+make[1]: *** [check_matmul] Error 137
+make[1]: Leaving directory '/home/HElib-master/src'
+Makefile:57: recipe for target 'check' failed
+make: *** [check] Error 2
+
+
+Take a look at the programs Test_*.cpp for examples of using HElib.
+
+root@vultr:/home# cd HElib-master
+root@vultr:/home/HElib-master# cd src
+root@vultr:/home/HElib-master/src# make check
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+make check_General
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_General_x R=1 k=10 p=2 r=2 noPrint=1
+./Test_General_x: GOOD
+
+./Test_General_x R=1 k=10 p=2 d=2 noPrint=1
+./Test_General_x: GOOD
+
+./Test_General_x R=2 k=10 p=7 r=2 noPrint=1
+./Test_General_x: GOOD
+
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_Permutations
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_Permutations_x noPrint=1
+***Testing m=4369, p=2, depth=5
+GOOD
+GOOD
+GOOD
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_PolyEval
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_PolyEval_x p=7 r=2 d=34 noPrint=1
+ encrypted poly match, plaintext poly match
+ encrypted poly match, plaintext poly match
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_Replicate
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_Replicate_x m=1247 noPrint=1
+  Replicate test succeeded :)
+  replicateAll() succeeded :), total time=0.396 (42 vectors)
+
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_EvalMap
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_EvalMap_x mvec="[7 3 221]" gens="[3979 3095 3760]" ords="[6 2 -8]" noPrint=1
+EvalMap: GOOD
+EvalMap: GOOD
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_extractDigits
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_extractDigits_x m=2047 p=5 noPrint=1
+digit extraction successful
+
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_bootstrapping
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_bootstrapping_x noPrint=1 N=512
+  *** reCryption succeeds!!
+./Test_bootstrapping_x p=7 noPrint=1
+  *** reCryption succeeds!!
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_ThinBootstrapping
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_ThinBootstrapping_x noPrint=1 N=512
+GOOD
+./Test_ThinBootstrapping_x p=7 noPrint=1
+GOOD
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_binaryArith
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_binaryArith_x
+  *** testAdd PASS ***
+  *** testProduct PASS ***
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_binaryCompare
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_binaryCompare_x
+  *** testCompare PASS ***
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_tableLookup
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+./Test_tableLookup_x
+  *** testLookup PASS ***
+  *** testWritein PASS ***
+make[1]: Leaving directory '/home/HElib-master/src'
+make check_Test_Bin_IO_x
+make[1]: Entering directory '/home/HElib-master/src'
+HElib requires NTL version 10.0.0 or higher, see http://shoup.net/ntl
+If you get compilation errors, try to add/remove -std=c++11 in Makefile
+
+make[1]: *** No rule to make target 'check_Test_Bin_IO_x'.  Stop.
+make[1]: Leaving directory '/home/HElib-master/src'
+Makefile:57: recipe for target 'check' failed
+make: *** [check] Error 2
+root@vultr:/home/HElib-master/src# 
+=============================================================
+
