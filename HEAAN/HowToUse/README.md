@@ -1,3 +1,12 @@
+# How To Use
+##step 1. put the .h files and libHEAAN.a and the source file that you want to compile in the same directory.
+
+##step 2. # g++ run.cpp -o HEAAN libHEAAN.a -lntl -lgmp -lm -std=c++11 -o2 -pthread
+
+##step 3. # ./HEAAN
+
+#(https://github.com/snucrypto/HEAAN)
+
 # HEAAN
 HEAAN is software library that implements homomorphic encryption (HE) that supports fixed point arithmetics.
 This library supports approximate operations between rational numbers.
