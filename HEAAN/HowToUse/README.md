@@ -1,9 +1,9 @@
 # How To Use
-## step 1. put the .h files, libHEAAN.a and the source file (run.cpp) in the same directory.
+## step 1. put the .h files, libHEAAN.a and the source file (run.cpp) into the same directory.
 
 ## step 2. # g++ run.cpp  libHEAAN.a -lntl -lgmp -lm -std=c++11 -O2 -pthread
 
-## step 3. # ./HEAAN
+## step 3. # ./a.out
 
 # (https://github.com/snucrypto/HEAAN)
 # HEAAN
