@@ -1,4 +1,4 @@
- 
- Kyoohyung Han
- and
- Miran Kim 
+Kyoohyung Han  
+and  
+Miran Kim  
+
