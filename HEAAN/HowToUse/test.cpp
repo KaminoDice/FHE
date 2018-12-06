@@ -18,13 +18,19 @@
 using namespace std;
 using namespace NTL;
 
+void print(complex<double>* &vec, long slots)
+{
+	for(int i=0;i!=slots;++i)
+		cout<<"\t"<<vec[i];
+}
+
 int main() {
 
   // Parameters //
   long logn = 3;  // useless in this case, slots = (1 << logn)
-  long logq = 3;
-  long logp = 2; ///< Larger logp will give you more correct result (smaller computation noise)
-                  long slots = 8; ///< This should be power of two
+  long logq = 7;
+  long logp = 0; ///< Larger logp will give you more correct result (smaller computation noise)
+                  long slots = 4; ///< This should be power of two
 		  long logr = 0; ///< It is used for scheme.addLeftRotKey(secretKey, (1 << logr)); 
   long numThread = 8;
 
@@ -40,8 +46,12 @@ cout<<"RUN 0"<<endl;
           scheme.addRightRotKey(secretKey, (1<<logr)); ///< When you need right rotation for the vectorized message
 cout<<"RUN H"<<endl;  
   // Make Random Array of Complex //
-  complex<double>* mvec1 = EvaluatorUtils::randomComplexArray(slots);
-  complex<double>* mvec2 = EvaluatorUtils::randomComplexArray(slots);
+  //complex<double>* mvec1 = EvaluatorUtils::randomComplexArray(slots);
+  complex<double>* mvec1 = new complex<double>[slots];
+  for(int i=0; i!=slots; ++i) mvec1[i] = i+1;
+  //complex<double>* mvec2 = EvaluatorUtils::randomComplexArray(slots);
+  complex<double>* mvec2 = new complex<double>[slots];
+  for(int i=0; i!=slots; ++i) mvec2[i] = i+1;
 cout<<"RUN 1"<<endl;  
   // Encrypt Two Arry of Complex //
   Ciphertext cipher1;
@@ -64,18 +74,35 @@ cout<<"RUN 1"<<endl;
   scheme.reScaleBy(cipherMultAfterReScale, cipherMult, logp);
  cout<<"RUN 4"<<endl;
   // Rotation //
+  complex<double> mmval(4, 0);
+  Ciphertext ccval;
+  scheme.encryptSingle(ccval,mmval, logp, logq);
+  complex<double> ddval = scheme.decryptSingle(secretKey, ccval);
   long idx = 1;
-  Ciphertext cipherRot;
-  scheme.leftRotateFast(cipherRot, cipher1, idx);
+  Ciphertext ccrot;
+  scheme.leftRotateFast(ccrot, ccval, idx);
+  complex<double> mmrot = scheme.decryptSingle(secretKey, ccrot);
  cout<<"RUN 5"<<endl;
   // Decrypt //
   complex<double>* dvec1 = scheme.decrypt(secretKey, cipher1);
   complex<double>* dvec2 = scheme.decrypt(secretKey, cipher2);
-  complex<double> plainRot = scheme.decryptSingle(secretKey, cipherRot);
-  auto before = scheme.decryptSingle(secretKey, cipher1);
-  cout<<"BEFORE ROTATION : "<<before<<endl;
-  cout<<"AFTER  ROTATION : "<<plainRot<<endl;
-cout<<"RUN 6"<<endl;
+  complex<double>* dadd  = scheme.decrypt(secretKey, cipherAdd);
+  complex<double>* dmult = scheme.decrypt(secretKey, cipherMult);
+  complex<double>* dmres = scheme.decrypt(secretKey, cipherMultAfterReScale);
+  
+
+  cout<<"# mvec1 :";print(mvec1, slots);cout<<"#"<<endl;
+  cout<<"# mvec2 :";print(mvec2, slots);cout<<"#"<<endl;
+  cout<<"# dvec1 :";print(dvec1, slots);cout<<"#"<<endl;
+  cout<<"# dvec2 :";print(dvec2, slots);cout<<"#"<<endl;
+  cout<<"# dadd  :";print(dadd, slots); cout<<"#"<<endl;
+  cout<<"# dmult :";print(dmult, slots);cout<<"#"<<endl;
+  cout<<"# dmres :";print(dmres, slots);cout<<"#"<<endl;
+  cout<<"# mval :"<<mmval<<endl;
+  cout<<"# dval :"<<ddval<<endl;
+  cout<<"# mrot :"<<mmrot<<endl;
+ 
+  cout<<"RUN 6"<<endl;
 
   return 0;
 
