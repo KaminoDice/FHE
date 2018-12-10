@@ -32,11 +32,11 @@ int main() {
 //   STANDARD TESTS
 //----------------------------------------------------------------------------------
 
-
-//	TestScheme::testEncrypt(7, 10, 3);
-       long logq = 7; 
-       long logp = 10; 
-       long logn = 3;
+//      refer to HEAAN.cpp
+//	TestScheme::testEncrypt(1200, 30, 4);
+       long logq = 1200; 
+       long logp = 30; 
+       long logn = 4;
        cout<< "!!! START TEST ENCRYPT !!!" <<endl;
        srand(time(NULL));
        SetNumThreads(8);
