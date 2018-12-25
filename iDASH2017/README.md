@@ -33,15 +33,10 @@ If "C/C++ Build" >> "Settings" is missing "Tool Settings" :
                                      /usr/local/include  
 Make sure "GNU C" and "Assembly" both have the same "Include directories".  
   
-Now, build this project, and it probably success with finished building target: iDASH2017.
-Remeber: "Run as" | "Local C/C++ Application" will not run the finished building target, 
+Now, build this project, and it probably success with finished building target: iDASH2017.  
+Remeber: "Run as" | "Local C/C++ Application" will not run the finished building target,   
          it need to run on command line: ./IDASH2017 "../data/data103x1579.txt" 1 7 5 1 -1 1 5 1  
          
-
-
-
-
-
 # Not a Good Way To Import the project IDASH2017
 First of all, download the .zip file from IDASH2017 github page, select "Clone or download" | "Download ZIP"  
 
