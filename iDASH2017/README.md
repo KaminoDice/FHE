@@ -15,6 +15,6 @@ General >> Archive File
 Next  
   
 To archive file: /home/tree/IDASH2017.zip  
-[Y] Save in zip format                            [Y] Create directory structure for files
-[Y] Compress the contents of the file  
+[Y] Save in zip format                            [Y] Create directory structure for files  
+[Y] Compress the contents of the file    
 Finish
