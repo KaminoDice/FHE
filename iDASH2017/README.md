@@ -6,7 +6,7 @@ Unzip the IDASH2017-master.zip file, that will create directory: /IDASH2017-mast
 Start Eclipse IDE, File >> New >> Project... >> C/C++ >> C++ Project  
 C++ Project--------------------------------------------------------------------------------  
 Project name: iDASH2017  
-[X] Use default location
+[ ] Use default location  
 Location: /home/tree/Downloads/IDASH2017-master/IDASH2017  
 Project type: Makefile project >> Empty Project  
 Toolchains: Linux GCC  
