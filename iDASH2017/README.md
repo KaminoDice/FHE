@@ -14,7 +14,7 @@ Next
 Finish  
   
 ## Configure this IDASH2017 project  
-Right Click on the IDASH2017 project, choose "Properties":
+Right Click on the IDASH2017 project, choose "Properties":  
 Properties---------------------------------------------------------------------------------  
 If "C/C++ Build" >> "Settings" is missing "Tool Settings" : 
     Select "C/C++ Build" | "Makefile generation" >> "Generate Makefiles automatically" and Click "Apply".  
