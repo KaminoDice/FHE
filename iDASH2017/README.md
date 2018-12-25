@@ -8,7 +8,7 @@ Import source: /home/tree/Downloads/IDASH2017-master.zip
 Do not select the box  Working sets | Add project to working sets!  
 Just click Finish.  
 
-# Export the project IDASH2017 with its finished building target
+# Export the project IDASH2017  
 Right Click on the project IDASH2017, choose "Export..."  
 Export--------------------------------------------------------------------------------------  
 General >> Archive File  
