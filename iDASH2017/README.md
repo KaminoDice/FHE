@@ -16,15 +16,16 @@ Finish
 ## Configure this IDASH2017 project  
 Right Click on the IDASH2017 project, choose "Properties":  
 Properties---------------------------------------------------------------------------------  
-If "C/C++ Build" >> "Settings" is missing "Tool Settings" : 
+If "C/C++ Build" >> "Settings" is missing "Tool Settings" :   
     Select "C/C++ Build" | "Makefile generation" >> "Generate Makefiles automatically" and Click "Apply".  
  
-"C/C++ Build" >> "Settings" >> "Tool Settings" >> "GCC C++ Linker"-------------------------  
-"Libraries" >> "Libraries(-l)" : ntl, gmp, HEAAN, m (the order is important, otherwise will end in error)
-"Libraries" >> "Library search path(-L)" : directories in which we can find the above libraries (ntl, gmp,...)
-                                          /usr/local/lib (libntl.a, libgmp.a, libgmpxx.a ...)
+"C/C++ Build" >> "Settings" >> "Tool Settings" >> "GCC C++ Linker"-------------------------    
+"Libraries" >> "Libraries(-l)" : ntl, gmp, HEAAN, m (the order is important, otherwise will end in error)  
+"Libraries" >> "Library search path(-L)" : directories in which we can find the above libraries (ntl, gmp,...)  
+                                          /usr/local/lib (libntl.a, libgmp.a, libgmpxx.a ...)  
                                           /home/tree/Downloads/HEAAN/HEAAN/lib  (libHEAAN.a)  
-"Miscellaneous" | "Linker flags" : -pthread  
+      
+ "Miscellaneous" | "Linker flags" : -pthread  
   
 "C/C++ General" >> "Paths and Symbols" >> "Includes" >> "Languages"-------------------------  
 "GNU C++" >> "Include directories" : directories in which we can find the .h files (gmp.h,gmpxx.h,HEAAN.h ...)
