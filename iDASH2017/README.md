@@ -1,3 +1,5 @@
+# a copy of https://github.com/kimandrik/IDASH2017 .  
+
 # a Good Way To Import the project IDASH2017  
 First of all, download the IDASH2017-master.zip file from IDASH2017 github page, select "Clone or download" | "Download ZIP"  
   
