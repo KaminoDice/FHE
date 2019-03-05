@@ -31,7 +31,6 @@ g = inline('1.0 ./ (1.0 + exp(-z))');
 % Newton's method
 MAX_ITR = 7;
 J = zeros(MAX_ITR, 1);
-
 for i = 1:MAX_ITR
     % Calculate the hypothesis function
     z = x * theta;
@@ -45,7 +44,7 @@ for i = 1:MAX_ITR
     
     % Calculate J (for testing convergence)
     J(i) =(1/m)*sum(-y.*log(h) - (1-y).*log(1-h));
-    
+           
     theta = theta - H\grad;
 end
 % Display theta
@@ -71,3 +70,8 @@ plot(0:MAX_ITR-1, J, 'o--', 'MarkerFaceColor', 'r', 'MarkerSize', 8)
 xlabel('Iteration'); ylabel('J')
 % Display J
 J
+% Plot E
+figure
+plot(E)
+% Display E
+E

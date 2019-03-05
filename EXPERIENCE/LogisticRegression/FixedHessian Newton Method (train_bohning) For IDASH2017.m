@@ -1,34 +1,25 @@
-% Bohning's method
-
 clear all; close all; clc
 
-x = load('ex4x.dat'); 
-y = load('ex4y.dat');
-x(1:5,:)
-y(1:5)
+data  = csvread('data103x1579.csv',1,0);
+[row,col] = size(data);
+xData = data(:,2:col);
+yData = data(:,1);
 
-% tiny d = 10;
-% medium
-d = 2;
-% big  d = 500;
-n = size(x)(1);
+x = xData; 
+y = yData;
 
-% function r = dirichlet_sample(a,n)
-% DIRICHLET_SAMPLE(a) returns a probability vector sampled from a 
-% Dirichlet distribution with parameter vector A.
-% DIRICHLET_SAMPLE(a,n) returns N samples, collected into a matrix, each 
-% vector having the same orientation as A.
-%x = dirichlet_sample(ones(d,1),n);
+[m, n] = size(x);
+% Add intercept term to x
+x = [ones(m, 1), x];
+
 % So each column of x is a record.
-x = [ones(size(x)(1),1),x];
 x = x';
-% rand(1,n) return a matrix(1,n)
 y = y';     % y(i) in       {0 ,  1}
 y = 2*y-1;  % shift y(i) to {-1, +1}
 
 [d,n] = size(x);
 
-xy = x.*(ones(rows(x),1)*y(:)')
+xy = x.*(ones(rows(x),1)*y(:)');
 % function xy = scale_cols(x, y)
 %%  SCALE_COLS(x,y) returns a matrix (xy) of same size as x, 
 %%  such that xy(:,i) = x(:,i)*y(i)
